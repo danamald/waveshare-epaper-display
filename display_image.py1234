@@ -1,0 +1,29 @@
+import sys
+sys.path.append('/home/epaper/e-Paper/RaspberryPi_JetsonNano/python/lib')
+
+from waveshare_epd import epd7in3e
+from PIL import Image
+import time
+
+if len(sys.argv) < 2:
+    print("Usage: python3 display_image.py <image_path>")
+    sys.exit(1)
+
+image_path = sys.argv[1]
+print(f"Loading image: {image_path}")
+
+img = Image.open(image_path)
+img = img.resize((800, 480), Image.LANCZOS)
+
+print("Initializing e-Paper...")
+epd = epd7in3e.EPD()
+epd.init()
+
+print("Displaying (15-30 seconds)...")
+epd.display(epd.getbuffer(img))
+
+time.sleep(5)
+
+print("Sleeping display...")
+epd.sleep()
+print("Done!")
